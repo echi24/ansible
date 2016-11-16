@@ -1,16 +1,25 @@
+###############################################################
+# This playbook is to check that the file ntp.conf is correct
+# After that, the service is restarted.
+#
+# Modified: 2016-11-16 - echi24 at gmail dot com
+#
+##############################################################
+
 ---
 - hosts: all
 
   tasks:
-  - name: sshd configuration file update
-    template: src=files/sshd_config
-      dest=/etc/ssh/sshd_config
+  - name: Chequeo de archivo ntp.conf
+    template: src=files/ntp.conf
+      dest=/etc/ntp.conf
       backup=yes
       owner=0 group=0 mode=0644
-      validate='/usr/sbin/sshd -T -f %s'
+      validate='/usr/sbin/ntpq -p %s'
     notify:
-    - restart sshd
+    - restart ntpd
 
   handlers:
-    - name: restart sshd
-      service: name=sshd state=restarted
+    - name: restart ntpd
+      service: name=ntpd state=restarted
+
